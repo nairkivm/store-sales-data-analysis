@@ -1,5 +1,12 @@
 # Chapter 004
 
+- [Chapter 004](#chapter-004)
+	- [Mencari pembeli high value](#mencari-pembeli-high-value)
+	- [Mencari Dropshipper](#mencari-dropshipper)
+	- [Mencari Reseller Offline](#mencari-reseller-offline)
+	- [Pembeli sekaligus penjual](#pembeli-sekaligus-penjual)
+	- [Lama transaksi dibayar](#lama-transaksi-dibayar)
+
 ## Mencari pembeli high value
 
 > Query
