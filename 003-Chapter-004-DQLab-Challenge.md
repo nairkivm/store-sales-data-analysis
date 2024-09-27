@@ -117,53 +117,63 @@ order by 3 desc
 > Query
 
 ```postgresql
-select users.nama_user as nama_pembeli, orders.total as nilai_transaksi, orders.created_at as tanggal_transaksi
-from orders
-inner join users on buyer_id = user_id
-where created_at>='2019-12-01' and created_at<'2020-01-01'
-and total >= 2e7
+-- Cari penjual yang juga pernah bertransaksi sebagai pembeli minimal 7 kali.
+
+select
+	nama_user as nama_pengguna,
+	jumlah_transaksi_beli,
+	jumlah_transaksi_jual
+from users
+inner join (select buyer_id, count(1) as jumlah_transaksi_beli from orders group by 1) as buyer on buyer_id = user_id
+inner join (select seller_id, count(1) as jumlah_transaksi_jual from orders group by 1) as seller on seller_id = user_id
+where jumlah_transaksi_beli >= 7
 order by 1
 ```
 
 > Result
 
-|nama_pembeli|nilai_transaksi|tanggal_transaksi|
-|------------|---------------|-----------------|
-|Diah Mahendra|21142000|2019-12-24|
-|Dian Winarsih|22966000|2019-12-21|
-|dr. Yulia Waskita|29930000|2019-12-28|
-|drg. Kajen Siregar|27893500|2019-12-10|
-|Drs. Ayu Lailasari|22300000|2019-12-09|
-|Hendri Habibi|21815000|2019-12-19|
-|Kartika Habibi|25760000|2019-12-22|
-|Lasmanto Natsir|22845000|2019-12-27|
-|R.A. Betania Suryono|20523000|2019-12-07|
-|Syahrini Tarihoran|29631000|2019-12-05|
-|Tgk. Hamima Sihombing, M.Kom.|29351400|2019-12-25|
-|Tgk. Lidya Lazuardi, S.Pt|20447000|2019-12-16|
+|nama_pengguna|jumlah_transaksi_beli|jumlah_transaksi_jual|
+|-------------|---------------------|---------------------|
+|Bahuwirya Haryanto|8|1032|
+|Dr. Adika Kusmawati, S.Pt|7|1098|
+|Gandi Rahmawati|8|1078|
+|Jaka Hastuti|7|1094|
+|R.M. Prayogo Damanik, S.Pt|8|1044|
 
-## Kategori Produk Terlaris di 2020
+## Lama transaksi dibayar
 
 > Query
 
 ```postgresql
-select category, sum(quantity) as total_quantity, sum(price) as total_price
+-- Hitung rata-rata lama waktu dari transaksi dibuat sampai dibayar, dikelompokkan per bulan.
+select to_char(created_at, 'YYYYMM') as tahun_bulan, count(1) as jumlah_transaksi,
+avg(extract('day' from age(paid_at, created_at))) as avg_lama_dibayar,
+min(extract('day' from age(paid_at, created_at))) min_lama_dibayar,
+max(extract('day' from age(paid_at, created_at))) max_lama_dibayar
 from orders
-inner join order_details using(order_id)
-inner join products using(product_id)
-where created_at>='2020-01-01'
-and delivery_at is not null
+where paid_at is not null
 group by 1
-order by 2 desc
-limit 5
+order by 1
 ```
 
 > Result
 
-|category|total_quantity|total_price|
-|--------|--------------|-----------|
-|Kebersihan Diri|1646452|2332980000|
-|Fresh Food|519996|1382720000|
-|Makanan Instan|487580|118202000|
-|Bahan Makanan|376422|206334000|
-|Minuman Ringan|369494|109364000|
+|tahun_bulan|jumlah_transaksi|avg_lama_dibayar|min_lama_dibayar|max_lama_dibayar|
+|-----------|----------------|----------------|----------------|----------------|
+|201901|107|7.0467289719626168|1|14|
+|201902|326|7.5398773006134969|1|14|
+|201903|628|7.4601910828025478|1|14|
+|201904|914|7.2910284463894967|1|14|
+|201905|1357|7.3691967575534267|1|14|
+|201906|1798|7.5728587319243604|1|14|
+|201907|2504|7.4548722044728435|1|14|
+|201908|3050|7.6216393442622951|1|14|
+|201909|4037|7.5021055239038890|1|14|
+|201910|5170|7.4705996131528046|1|14|
+|201911|6683|7.5187789914708963|1|14|
+|201912|9451|7.4980425351814623|1|14|
+|202001|4718|7.4152183128444256|1|14|
+|202002|5501|7.5091801490638066|1|14|
+|202003|6814|7.4674200176108013|1|14|
+|202004|7443|7.4792422410318420|1|14|
+|202005|9327|7.4549158357456846|1|14|
