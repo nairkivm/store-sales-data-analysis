@@ -59,64 +59,83 @@ Buat tabel _user retention rate_ bulanan yang terinpirasi dari artikel [berikut]
 > Query
 
 ```postgresql
--- Pertama, buat CTE/temp table untuk menampung data new orders
--- Note: gunakan windows function untuk mendapat order_id pertama setiap user
-with new_orders as (
-	select distinct
-		buyer_id,
-		first_value(order_id) over(
-			partition by buyer_id
-			order by created_at
-			rows between unbounded preceding 
-				and unbounded following 
-		) as first_order_id
-	from orders
-),
--- Selanjutnya, buat CTE/temp table untuk menampung user summary yang mengandung
--- jumlah total users dan new users
-user_summary as (
+-- Pertama, kita buat tabel untuk merangkum kapan saja user melakukan transaksi tiap bulan
+drop table if exists user_monthly_transaction;
+create temporary table user_monthly_transaction as
+select distinct
+	date_trunc('month', o.created_at) as month_,
+	o.buyer_id
+from orders o;
+
+-- Selanjutnya, kita buat tabel untuk rangkuman retentionnya menggunakan case + lead function. 
+-- Btw, umt = user_monthly_transaction
+drop table if exists user_retention_summary;
+create temporary table user_retention_summary as
+with umt_lead_month as (
 	select
-		to_char(created_at, 'YYYYMM') as year_month,
-		count(distinct u.user_id) as total_users,
-		count(distinct n.buyer_id) as total_new_users
-	from orders o
-	join users u
-		on o.buyer_id = u.user_id
-	left join new_orders n
-		on o.buyer_id = n.first_order_id 
-	group by 1
+		month_,
+		lead(month_, 1) over(
+			partition by buyer_id 
+			order by buyer_id, month_
+		) as lead_month_,
+		buyer_id
+	from user_monthly_transaction
+),
+umt_delta_month as (
+	select
+		month_,
+		lead_month_,
+		(
+			extract(year from age(lead_month_, month_)) * 12 +
+			extract(month from age(lead_month_, month_))
+		) as delta_month_,
+		buyer_id
+	from umt_lead_month
 )
--- Terakhir, buat query untuk perhitungan user retention
--- Note: gunakan fungsi lag
-select 
-	year_month,
-	total_users,
-	total_new_users,
-	round(1::numeric*(total_users - total_new_users)/lag(total_users) over(
-		order by year_month
-	), 3) as user_retention_rate
-from user_summary
-order by year_month
+select
+	buyer_id as user_id,
+	month_,
+	lead_month_,
+	delta_month_,
+	case
+		when delta_month_ = 1 then 'retained'
+		when delta_month_ > 1 then 'lagger'
+		when delta_month_ is null then 'lost'
+	end as user_type
+from umt_delta_month;
+
+-- Terakhir, kita bisa menghitung jumlah user di bulan tertentu yang kembali lagi bertransaksi di bulan depan
+select
+	to_char(month_, 'YYYYMM') year_month,
+	count(
+		case 
+			when user_type = 'retained' then user_id 
+		end
+	) / count(user_id)::numeric as retention,
+	count(user_id) as user_count
+from user_retention_summary
+group by 1
+order by 1;
 ```
 
 > Result
 
-|year_month|total_users|total_new_users|user_retention_rate|
-|----------|-----------|---------------|-------------------|
-|201901|117|4||
-|201902|350|17|2.846|
-|201903|655|28|1.791|
-|201904|959|38|1.406|
-|201905|1423|46|1.436|
-|201906|1820|65|1.233|
-|201907|2476|86|1.313|
-|201908|3005|116|1.167|
-|201909|3822|133|1.228|
-|201910|4799|170|1.211|
-|201911|5919|229|1.186|
-|201912|7718|288|1.255|
-|202001|4823|192|0.600|
-|202002|5549|219|1.105|
-|202003|6847|255|1.188|
-|202004|7486|259|1.055|
-|202005|9610|377|1.233|
+|year_month|retention|user_count|
+|----------|---------|----------|
+|201901|0.02564102564102564103|117|
+|201902|0.05142857142857142857|350|
+|201903|0.05648854961832061069|655|
+|201904|0.09071949947862356621|959|
+|201905|0.10892480674631061138|1423|
+|201906|0.13901098901098901099|1820|
+|201907|0.16357027463651050081|2476|
+|201908|0.21963394342762063228|3005|
+|201909|0.26478283621140763998|3822|
+|201910|0.32965201083559074807|4799|
+|201911|0.43199864842034127386|5919|
+|201912|0.27247991707696294377|7718|
+|202001|0.31246112378187849886|4823|
+|202002|0.37105784826094791854|5549|
+|202003|0.38863735942748649043|6847|
+|202004|0.31405289874432273577|7486|
+|202005|0.00000000000000000000|9610|
