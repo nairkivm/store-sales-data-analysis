@@ -54,7 +54,7 @@ from order_summary
 
 # User Retention Rate
 
-Buat tabel _user retention rate_ bulanan dengan menggunakan rumus (total pembeli akhir bulan - pembeli baru) / total pembeli awal bulan.
+Buat tabel _user retention rate_ bulanan yang terinpirasi dari artikel [berikut](https://medium.com/cube-dev/customer-retention-analysis-93af9daee46b).
 
 > Query
 
