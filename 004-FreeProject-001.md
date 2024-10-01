@@ -52,6 +52,10 @@ from order_summary
 |202004|7955|0.09|21219233750|0.23|
 |202005|10026|0.26|31288823000|0.47|
 
+> Data Visualization
+
+![Monthly Transactions](assets\monthly-trx.png)
+
 # User Retention Rate
 
 Buat tabel _user retention rate_ bulanan yang terinpirasi dari artikel [berikut](https://medium.com/cube-dev/customer-retention-analysis-93af9daee46b).
@@ -139,4 +143,8 @@ order by 1;
 |202003|0.3886|6847|
 |202004|0.3141|7486|
 |202005|0.0000|9610|
+
+# User Retention Rate (Another Technique)
+
+Dalam perhitungan _user retention rate_ sebelumnya, kita memperoleh informasi berapa persen user di bulan tertentu yang akan kembali lagi melakukan transaksi tepat di bulan berikutnya. Ada cara lain untuk menghitung _user retention rate_, yaitu menghitung berapa persen user di bulan ini yang statusnya 'retained' dari bulan lalu. Selain dari user yang 'retained', keseluruhan user di bulan tertentu juga tersusun dari user 'new' dan 'returning'. User 'new' adalah user yang baru terakuisisi di bulan tertentu, sedangkan user 'returning' merupakan user yang kembali lagi bertransaksi setelah 'hilang' selama lebih dari 1 bulan.
 
