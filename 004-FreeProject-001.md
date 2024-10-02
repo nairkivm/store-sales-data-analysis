@@ -52,7 +52,7 @@ from order_summary
 |202004|7955|0.09|21219233750|0.23|
 |202005|10026|0.26|31288823000|0.47|
 
-> Data Visualization
+> Data Visualization (via Power BI)
 
 ![Monthly Transactions](assets\monthly-trx.png)
 
@@ -115,8 +115,8 @@ select
 		case 
 			when user_type = 'retained' then user_id 
 		end
-	) / count(user_id)::numeric as retention,
-	count(user_id), 4) as user_count
+	) / count(user_id)::numeric, 4) as retention,
+	count(user_id) as user_count
 from user_retention_summary
 group by 1
 order by 1;
@@ -144,7 +144,113 @@ order by 1;
 |202004|0.3141|7486|
 |202005|0.0000|9610|
 
+> Data Visualization (via Metabase)
+
+![Monthly Retention Rate](assets\monthly-retention.png)
+
 # User Retention Rate (Another Technique)
 
-Dalam perhitungan _user retention rate_ sebelumnya, kita memperoleh informasi berapa persen user di bulan tertentu yang akan kembali lagi melakukan transaksi tepat di bulan berikutnya. Ada cara lain untuk menghitung _user retention rate_, yaitu menghitung berapa persen user di bulan ini yang statusnya 'retained' dari bulan lalu. Selain dari user yang 'retained', keseluruhan user di bulan tertentu juga tersusun dari user 'new' dan 'returning'. User 'new' adalah user yang baru terakuisisi di bulan tertentu, sedangkan user 'returning' merupakan user yang kembali lagi bertransaksi setelah 'hilang' selama lebih dari 1 bulan.
+Dalam perhitungan _user retention rate_ sebelumnya, kita memperoleh informasi berapa persen user di bulan tertentu yang akan kembali lagi melakukan transaksi tepat di bulan berikutnya. 
 
+Ada cara lain untuk menghitung _user retention rate_, yaitu menghitung berapa persen user di bulan ini yang statusnya 'retained' dari bulan lalu. Selain dari user yang 'retained', keseluruhan user di bulan tertentu juga tersusun dari user 'new' dan 'returning'. User 'new' adalah user yang baru terakuisisi di bulan tertentu, sedangkan user 'returning' merupakan user yang kembali lagi bertransaksi setelah 'hilang' selama lebih dari 1 bulan. 
+
+Dengan cara seperti ini, tim marketing dapat lebih mudah menargetkan inisiatif berdasarkan kepentingannya: apakah ingin memberikan reward kepada user 'retained' agar tetap bertransaksi di bulan berikutnya, menargetkan promo kepada user 'returning' agar lebih sering bertransaksi, dan sebagainya.
+
+> Query
+
+```postgresql
+-- Pertama, kita buat tabel untuk merangkum kapan saja user melakukan transaksi tiap bulan
+with user_monthly_transaction as (
+    select distinct
+    	date_trunc('month', o.created_at) as month_,
+    	o.buyer_id
+    from orders o
+),
+
+-- Selanjutnya, kita buat tabel untuk rangkuman retentionnya menggunakan case + lag function. 
+-- Btw, umt = user_monthly_transaction
+umt_lag_month as (
+	select
+		month_,
+		lag(month_, 1) over(
+			partition by buyer_id 
+			order by buyer_id, month_
+		) as lag_month_,
+		buyer_id
+	from user_monthly_transaction
+),
+umt_delta_month as (
+	select
+		month_,
+		lag_month_,
+		(
+			extract(year from age(month_, lag_month_)) * 12 +
+			extract(month from age(month_, lag_month_))
+		) as delta_month_,
+		buyer_id
+	from umt_lag_month
+),
+user_retention_summary as (
+    select
+    	buyer_id as user_id,
+    	month_,
+    	lag_month_,
+    	delta_month_,
+    	case
+    		when delta_month_ = 1 then 'retained'
+    		when delta_month_ > 1 then 'returning'
+    		when delta_month_ is null then 'new'
+    	end as user_type
+    from umt_delta_month
+)
+
+-- Terakhir, kita bisa menghitung jumlah user di bulan tertentu yang kembali lagi bertransaksi dari transaksi di bulan sebelumnya,
+-- jumlah user baru, dan jumlah user yang kembali lagi dari setelah transaksi > 1 bulan lalu
+select
+	to_char(month_, 'YYYYMM') year_month,
+	count(
+		case 
+			when user_type = 'retained' then user_id 
+		end
+	) as retained,
+	count(
+		case 
+			when user_type = 'returning' then user_id 
+		end
+	) as returning,
+	count(
+		case 
+			when user_type = 'new' then user_id 
+		end
+	) as new,
+	count(user_id) as user_count
+from user_retention_summary
+group by 1
+order by 1;
+```
+
+> Result
+
+|year_month|retained|returning|new|user_count|
+|----------|--------|---------|---|----------|
+|201901|0|0|117|117|
+|201902|3|0|347|350|
+|201903|18|4|633|655|
+|201904|37|24|898|959|
+|201905|87|86|1250|1423|
+|201906|155|176|1489|1820|
+|201907|253|391|1832|2476|
+|201908|405|648|1952|3005|
+|201909|660|1144|2018|3822|
+|201910|1012|1820|1967|4799|
+|201911|1582|2487|1850|5919|
+|201912|2557|3594|1567|7718|
+|202001|2103|2178|542|4823|
+|202002|1507|3562|480|5549|
+|202003|2059|4403|385|6847|
+|202004|2661|4557|268|7486|
+|202005|2351|6977|282|9610|
+
+> Data Visualization (via Metabase)
+
+![Monthly Users](assets\monthly-users.png)
