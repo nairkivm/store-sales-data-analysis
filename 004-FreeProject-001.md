@@ -146,7 +146,7 @@ order by 1;
 
 > Data Visualization (via Metabase)
 
-![Monthly Retention Rate]/assets/monthly-retention.png)
+![Monthly Retention Rate](/assets/monthly-retention.png)
 
 # User Retention Rate (Another Technique)
 
