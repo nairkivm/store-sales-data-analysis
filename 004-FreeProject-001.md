@@ -10,7 +10,7 @@ Buat tabel rangkuman hasil transaksi bulanan, yakni jumlah transaksi (_transacti
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 with order_summary as (
 	select
 		to_char(created_at, 'YYYYMM') as month,
@@ -81,7 +81,7 @@ Buat tabel _user retention rate_ bulanan yang terinpirasi dari artikel [berikut]
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 -- Pertama, kita buat tabel untuk merangkum kapan saja user melakukan transaksi tiap bulan
 drop table if exists user_monthly_transaction;
 create temporary table user_monthly_transaction as
@@ -191,7 +191,7 @@ Dengan cara seperti ini, tim marketing dapat lebih mudah menargetkan inisiatif b
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 -- Pertama, kita buat tabel untuk merangkum kapan saja user melakukan transaksi tiap bulan
 with user_monthly_transaction as (
     select distinct
@@ -298,9 +298,9 @@ order by 1;
 
 ![Monthly Users](/assets/monthly-users.png)
 
-## Monthly Transactions
+## Monthly User Cohort
 
-Buat tabel rangkuman hasil transaksi bulanan, yakni jumlah transaksi (_transaction_count_) dan total nilai transaksi (_total_transaction_value_), beserta pertumbuhan tiap bulannya (_m_o_m_: month-on-month growth).
+Buat tabel monthlu user cohort
 
 > Query
 
@@ -308,7 +308,7 @@ Buat tabel rangkuman hasil transaksi bulanan, yakni jumlah transaksi (_transacti
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 with order_summary as (
 	select
 		to_char(created_at, 'YYYYMM') as month,
