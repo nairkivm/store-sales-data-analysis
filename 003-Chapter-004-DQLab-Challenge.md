@@ -15,7 +15,7 @@
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 -- Buatlah SQL query untuk mencari pembeli yang sudah bertransaksi lebih dari 5 kali, 
 -- dan setiap transaksi lebih dari 2,000,000.
 
@@ -55,7 +55,7 @@ order by 3 desc
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 -- Dropshipper: pembeli yang membeli barang akan tetapi dikirim ke orang lain. 
 -- Ciri-cirinya yakni transaksinya banyak, dengan alamat yang berbeda-beda.
 
@@ -99,7 +99,7 @@ order by count(1) desc
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 -- Reseller offline: pembeli yang sering sekali membeli barang dan 
 -- seringnya dikirimkan ke alamat yang sama. Pembelian juga dengan
 -- quantity produk yang banyak. Sehingga kemungkinan barang ini 
@@ -151,7 +151,7 @@ order by 3 desc
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 -- Cari penjual yang juga pernah bertransaksi sebagai pembeli minimal 7 kali.
 
 select
@@ -187,7 +187,7 @@ order by 1
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 -- Hitung rata-rata lama waktu dari transaksi dibuat sampai dibayar, dikelompokkan per bulan.
 select to_char(created_at, 'YYYYMM') as tahun_bulan, count(1) as jumlah_transaksi,
 avg(extract('day' from age(paid_at, created_at))) as avg_lama_dibayar,
