@@ -47,7 +47,7 @@
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 select
 	count(1)
 from information_schema.columns 
@@ -73,7 +73,7 @@ where table_schema = 'public'
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 select
 	count(1)
 from products p 
@@ -98,7 +98,7 @@ from products p
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 select
 	count(1)
 from products p 
@@ -122,7 +122,7 @@ from products p
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 select
 	sum(case when product_id is null then 1 else 0 end) as product_id_null_count,
 	sum(case when desc_product is null then 1 else 0 end) as desc_product_null_count,
@@ -153,7 +153,7 @@ Tidak ada variabel yang mempunyai nilai NULL / kosong
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 select
 	count(1)
 from information_schema.columns 
@@ -179,7 +179,7 @@ where table_schema = 'public'
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 select
 	count(1)
 from orders o 
@@ -204,7 +204,7 @@ from orders o
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 DO $$ 
 DECLARE 
     r RECORD;
@@ -263,7 +263,7 @@ Variabel yang berisi data amount (rupiah): 3 (`subtotal`, `discount`, `total`)
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 select
 	count(1)
 from information_schema.columns 
@@ -292,7 +292,7 @@ where table_schema = 'public'
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 select
 	date_trunc('month', created_at) as date_trunc_month,
 	to_char(created_at, 'Mon YYYY') as month_year,
@@ -338,7 +338,7 @@ order by 1
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 select 
 	count(1)
 from orders o 
@@ -363,7 +363,7 @@ where paid_at is null
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 select 
 	count(1)
 from orders o 
@@ -389,7 +389,7 @@ where paid_at is not null
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 select 
 	count(1)
 from orders o 
@@ -414,7 +414,7 @@ where delivery_at is null
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 select 
 	count(1)
 from orders o 
@@ -441,7 +441,7 @@ where delivery_at = paid_at
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 select 
 	count(1)
 from users u
@@ -465,7 +465,7 @@ from users u
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 select 
 	count(distinct buyer_id)
 from orders o 
@@ -489,7 +489,7 @@ from orders o
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 select 
 	count(distinct seller_id)
 from orders o 
@@ -513,7 +513,7 @@ from orders o
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 with user_exp as (
 	select 
 		u.user_id,
@@ -552,7 +552,7 @@ where buy_exp > 0
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 with user_exp as (
 	select 
 		u.user_id,
@@ -593,7 +593,7 @@ where buy_exp = 0
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 select
 	u.user_id,
 	u.nama_user,
@@ -630,7 +630,7 @@ limit 5
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 with top_5_frequent_buyer as (
 	select
 		u.user_id,
@@ -673,7 +673,7 @@ where total_discount_usage = 0
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 select
 	u.user_id,
 	u.nama_user,
@@ -707,7 +707,7 @@ _None_
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 select distinct
 	split_part(u.email, '@', 2) as email_domain 
 from orders o 
@@ -761,7 +761,7 @@ join users u
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 select
 	p.desc_product,
 	sum(od.quantity) as total_quantity 
