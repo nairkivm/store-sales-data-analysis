@@ -54,7 +54,7 @@ from order_summary
 
 > Data Visualization (via Power BI)
 
-![Monthly Transactions](assets\monthly-trx.png)
+![Monthly Transactions](/assets/monthly-trx.png)
 
 # User Retention Rate
 
@@ -146,7 +146,7 @@ order by 1;
 
 > Data Visualization (via Metabase)
 
-![Monthly Retention Rate](assets\monthly-retention.png)
+![Monthly Retention Rate]/assets/monthly-retention.png)
 
 # User Retention Rate (Another Technique)
 
@@ -253,4 +253,4 @@ order by 1;
 
 > Data Visualization (via Metabase)
 
-![Monthly Users](assets\monthly-users.png)
+![Monthly Users](/assets/monthly-users.png)
