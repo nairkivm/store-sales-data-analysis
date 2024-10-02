@@ -43,6 +43,10 @@
 
 > Query
 
+<details>
+
+<summary> <i>Lihat query</i> </summary>
+
 ```postgresql
 select
 	count(1)
@@ -50,6 +54,10 @@ from information_schema.columns
 where table_schema = 'public'
 	and table_name = 'products'
 ```
+
+</details>
+
+</br>
 
 > Result
 
@@ -61,11 +69,19 @@ where table_schema = 'public'
 
 > Query
 
+<details>
+
+<summary> <i>Lihat query</i> </summary>
+
 ```postgresql
 select
 	count(1)
 from products p 
 ```
+
+</details>
+
+</br>
 
 > Result
 
@@ -78,11 +94,19 @@ from products p
 
 > Query
 
+<details>
+
+<summary> <i>Lihat query</i> </summary>
+
 ```postgresql
 select
 	count(1)
 from products p 
 ```
+
+</details>
+
+</br>
 
 > Result
 
@@ -94,6 +118,10 @@ from products p
 
 > Query
 
+<details>
+
+<summary> <i>Lihat query</i> </summary>
+
 ```postgresql
 select
 	sum(case when product_id is null then 1 else 0 end) as product_id_null_count,
@@ -102,6 +130,10 @@ select
 	sum(case when base_price is null then 1 else 0 end) as base_price_null_count
 from products p 
 ```
+
+</details>
+
+</br>
 
 > Result
 
@@ -117,6 +149,10 @@ Tidak ada variabel yang mempunyai nilai NULL / kosong
 
 > Query
 
+<details>
+
+<summary> <i>Lihat query</i> </summary>
+
 ```postgresql
 select
 	count(1)
@@ -124,6 +160,10 @@ from information_schema.columns
 where table_schema = 'public'
 	and table_name = 'orders'
 ```
+
+</details>
+
+</br>
 
 > Result
 
@@ -135,11 +175,19 @@ where table_schema = 'public'
 
 > Query
 
+<details>
+
+<summary> <i>Lihat query</i> </summary>
+
 ```postgresql
 select
 	count(1)
 from orders o 
 ```
+
+</details>
+
+</br>
 
 > Result
 
@@ -151,6 +199,10 @@ from orders o
 ### Ada berapa variabel yang mempunyai nilai NULL / kosong
 
 > Query
+
+<details>
+
+<summary> <i>Lihat query</i> </summary>
 
 ```postgresql
 DO $$ 
@@ -175,6 +227,10 @@ BEGIN
 END $$;
 ```
 
+</details>
+
+</br>
+
 > Result
 
 ```log
@@ -185,6 +241,16 @@ Columns containing NULL values: 2
 
 ### Ada berapa variabel yang berisi data amount (rupiah)
 
+> Query
+
+<details>
+
+<summary> <i>Lihat query</i> </summary>
+
+</details>
+
+</br>
+
 > Result
 
 Variabel yang berisi data amount (rupiah): 3 (`subtotal`, `discount`, `total`)
@@ -192,6 +258,10 @@ Variabel yang berisi data amount (rupiah): 3 (`subtotal`, `discount`, `total`)
 ### Ada berapa variabel yang berisi data tanggal
 
 > Query
+
+<details>
+
+<summary> <i>Lihat query</i> </summary>
 
 ```postgresql
 select
@@ -201,6 +271,10 @@ where table_schema = 'public'
 	and table_name = 'orders'
     and data_type = 'date'
 ```
+
+</details>
+
+</br>
 
 > Result
 
@@ -214,6 +288,10 @@ where table_schema = 'public'
 
 > Query
 
+<details>
+
+<summary> <i>Lihat query</i> </summary>
+
 ```postgresql
 select
 	date_trunc('month', created_at) as date_trunc_month,
@@ -223,6 +301,10 @@ from orders o
 group by 1, 2
 order by 1
 ```
+
+</details>
+
+</br>
 
 > Result
 
@@ -252,12 +334,20 @@ order by 1
 
 > Query
 
+<details>
+
+<summary> <i>Lihat query</i> </summary>
+
 ```postgresql
 select 
 	count(1)
 from orders o 
 where paid_at is null
 ```
+
+</details>
+
+</br>
 
 > Result
 
@@ -269,6 +359,10 @@ where paid_at is null
 
 > Query
 
+<details>
+
+<summary> <i>Lihat query</i> </summary>
+
 ```postgresql
 select 
 	count(1)
@@ -276,6 +370,10 @@ from orders o
 where paid_at is not null
 	and delivery_at is null 
 ```
+
+</details>
+
+</br>
 
 > Result
 
@@ -287,12 +385,20 @@ where paid_at is not null
 
 > Query
 
+<details>
+
+<summary> <i>Lihat query</i> </summary>
+
 ```postgresql
 select 
 	count(1)
 from orders o 
 where delivery_at is null 
 ```
+
+</details>
+
+</br>
 
 > Result
 
@@ -304,12 +410,20 @@ where delivery_at is null
 
 > Query
 
+<details>
+
+<summary> <i>Lihat query</i> </summary>
+
 ```postgresql
 select 
 	count(1)
 from orders o 
 where delivery_at = paid_at  
 ```
+
+</details>
+
+</br>
 
 > Result
 
@@ -323,11 +437,19 @@ where delivery_at = paid_at
 
 > Query
 
+<details>
+
+<summary> <i>Lihat query</i> </summary>
+
 ```postgresql
 select 
 	count(1)
 from users u
 ```
+
+</details>
+
+</br>
 
 > Result
 
@@ -339,11 +461,19 @@ from users u
 
 > Query
 
+<details>
+
+<summary> <i>Lihat query</i> </summary>
+
 ```postgresql
 select 
 	count(distinct buyer_id)
 from orders o 
 ```
+
+</details>
+
+</br>
 
 > Result
 
@@ -355,11 +485,19 @@ from orders o
 
 > Query
 
+<details>
+
+<summary> <i>Lihat query</i> </summary>
+
 ```postgresql
 select 
 	count(distinct seller_id)
 from orders o 
 ```
+
+</details>
+
+</br>
 
 > Result
 
@@ -370,6 +508,10 @@ from orders o
 ### Ada berapa total pengguna yang pernah bertransaksi sebagai pembeli dan pernah sebagai penjual?
 
 > Query
+
+<details>
+
+<summary> <i>Lihat query</i> </summary>
 
 ```postgresql
 with user_exp as (
@@ -392,6 +534,10 @@ where buy_exp > 0
 	and sell_exp > 0
 ```
 
+</details>
+
+</br>
+
 > Result
 
 | count |
@@ -401,6 +547,10 @@ where buy_exp > 0
 ### Ada berapa total pengguna yang tidak pernah bertransaksi sebagai pembeli maupun penjual?
 
 > Query
+
+<details>
+
+<summary> <i>Lihat query</i> </summary>
 
 ```postgresql
 with user_exp as (
@@ -423,6 +573,10 @@ where buy_exp = 0
 	and sell_exp = 0
 ```
 
+</details>
+
+</br>
+
 > Result
 
 | count |
@@ -434,6 +588,10 @@ where buy_exp = 0
 ### Siapakah 5 top pembeli dengan dengan total pembelian terbesar (berdasarkan total harga barang setelah diskon)?
 
 > Query
+
+<details>
+
+<summary> <i>Lihat query</i> </summary>
 
 ```postgresql
 select
@@ -447,6 +605,10 @@ group by 1, 2
 order by 3 desc
 limit 5
 ```
+
+</details>
+
+</br>
 
 > Result
 
@@ -463,6 +625,10 @@ limit 5
 ### Siapakah pengguna yang tidak pernah menggunakan diskon ketika membeli barang dan merupakan 5 top pembeli dengan transaksi terbanyak?
 
 > Query
+
+<details>
+
+<summary> <i>Lihat query</i> </summary>
 
 ```postgresql
 with top_5_frequent_buyer as (
@@ -485,6 +651,10 @@ from top_5_frequent_buyer
 where total_discount_usage = 0
 ```
 
+</details>
+
+</br>
+
 > Result
 
 |user_id|nama_user|transactions_count|total_discount_usage|
@@ -498,6 +668,10 @@ where total_discount_usage = 0
 ### Siapakah pengguna yang bertransaksi setidaknya 1 kali setiap bulan di tahun 2020 dengan rata-rata total amount per transaksi lebih dari 1 Juta
 
 > Query
+
+<details>
+
+<summary> <i>Lihat query</i> </summary>
 
 ```postgresql
 select
@@ -513,6 +687,10 @@ having count(distinct date_trunc('month', o.created_at)) = 12
 	and avg(o.total) > 1e6
 ```
 
+</details>
+
+</br>
+
 > Result
 
 _None_
@@ -525,6 +703,10 @@ _None_
 
 > Query
 
+<details>
+
+<summary> <i>Lihat query</i> </summary>
+
 ```postgresql
 select distinct
 	split_part(u.email, '@', 2) as email_domain 
@@ -532,6 +714,10 @@ from orders o
 join users u 
 	on o.seller_id = u.user_id
 ```
+
+</details>
+
+</br>
 
 > Result
 
@@ -571,6 +757,10 @@ join users u
 
 > Query
 
+<details>
+
+<summary> <i>Lihat query</i> </summary>
+
 ```postgresql
 select
 	p.desc_product,
@@ -585,6 +775,10 @@ group by 1
 order by 2 desc 
 limit 5
 ```
+
+</details>
+
+</br>
 
 > Result
 
