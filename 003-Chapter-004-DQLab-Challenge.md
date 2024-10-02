@@ -11,6 +11,10 @@
 
 > Query
 
+<details>
+
+<summary> <i>Lihat query</i> </summary>
+
 ```postgresql
 -- Buatlah SQL query untuk mencari pembeli yang sudah bertransaksi lebih dari 5 kali, 
 -- dan setiap transaksi lebih dari 2,000,000.
@@ -32,6 +36,10 @@ having count(1) > 5
 order by 3 desc
 ```
 
+</details>
+
+</br>
+
 > Result
 
 |nama_pembeli|jumlah_transaksi|total_nilai_transaksi|min_nilai_transaksi|
@@ -42,6 +50,10 @@ order by 3 desc
 ## Mencari Dropshipper
 
 > Query
+
+<details>
+
+<summary> <i>Lihat query</i> </summary>
 
 ```postgresql
 -- Dropshipper: pembeli yang membeli barang akan tetapi dikirim ke orang lain. 
@@ -68,6 +80,10 @@ having count(distinct orders.kodepos) >= 10
 order by count(1) desc
 ```
 
+</details>
+
+</br>
+
 > Result
 
 |nama_pembeli|jumlah_transaksi|distinct_kodepos|total_nilai_transaksi|avg_nilai_transaksi|
@@ -78,6 +94,10 @@ order by count(1) desc
 ## Mencari Reseller Offline
 
 > Query
+
+<details>
+
+<summary> <i>Lihat query</i> </summary>
 
 ```postgresql
 -- Reseller offline: pembeli yang sering sekali membeli barang dan 
@@ -109,6 +129,10 @@ having count(1)>=8 and avg(total_quantity)>10
 order by 3 desc
 ```
 
+</details>
+
+</br>
+
 > Result
 
 |nama_pembeli|jumlah_transaksi|total_nilai_transaksi|avg_nilai_transaksi|avg_quantity_per_transaksi|
@@ -122,6 +146,10 @@ order by 3 desc
 ## Pembeli sekaligus penjual
 
 > Query
+
+<details>
+
+<summary> <i>Lihat query</i> </summary>
 
 ```postgresql
 -- Cari penjual yang juga pernah bertransaksi sebagai pembeli minimal 7 kali.
@@ -137,6 +165,10 @@ where jumlah_transaksi_beli >= 7
 order by 1
 ```
 
+</details>
+
+</br>
+
 > Result
 
 |nama_pengguna|jumlah_transaksi_beli|jumlah_transaksi_jual|
@@ -151,6 +183,10 @@ order by 1
 
 > Query
 
+<details>
+
+<summary> <i>Lihat query</i> </summary>
+
 ```postgresql
 -- Hitung rata-rata lama waktu dari transaksi dibuat sampai dibayar, dikelompokkan per bulan.
 select to_char(created_at, 'YYYYMM') as tahun_bulan, count(1) as jumlah_transaksi,
@@ -162,6 +198,11 @@ where paid_at is not null
 group by 1
 order by 1
 ```
+
+</details>
+
+</br>
+
 
 > Result
 
