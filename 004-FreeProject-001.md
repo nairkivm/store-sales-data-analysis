@@ -1,5 +1,12 @@
 # Main Metrics
 
+- [Main Metrics](#main-metrics)
+	- [Monthly Transactions](#monthly-transactions)
+	- [User Retention Rate](#user-retention-rate)
+	- [User Retention Rate (Another Technique)](#user-retention-rate-another-technique)
+	- [Monthly User Cohort](#monthly-user-cohort)
+	- [Monthly User Cohort (%)](#monthly-user-cohort-)
+
 ## Monthly Transactions
 
 Buat tabel rangkuman hasil transaksi bulanan, yakni jumlah transaksi (_transaction_count_) dan total nilai transaksi (_total_transaction_value_), beserta pertumbuhan tiap bulannya (_m_o_m_: month-on-month growth).
