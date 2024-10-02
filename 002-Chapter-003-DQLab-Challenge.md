@@ -15,7 +15,7 @@
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 select seller_id, buyer_id, total as nilai_transaksi, created_at as tanggal_transaksi
 from orders
 where buyer_id = 10977
@@ -50,7 +50,7 @@ limit 10
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 select to_char(created_at, 'YYYYMM') as tahun_bulan, count(1) as jumlah_transaksi, sum(total) as total_nilai_transaksi
 from orders
 group by 1
@@ -81,7 +81,7 @@ limit 5
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 select buyer_id, count(1) as jumlah_transaksi, avg(total) as avg_nilai_transaksi
 from orders
 where created_at>='2020-01-01' and created_at<'2020-02-01'
@@ -119,7 +119,7 @@ limit 10
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 select users.nama_user as nama_pembeli, orders.total as nilai_transaksi, orders.created_at as tanggal_transaksi
 from orders
 inner join users on buyer_id = user_id
@@ -157,7 +157,7 @@ order by 1
 
 <summary> <i>Lihat query</i> </summary>
 
-```postgresql
+```sql
 select category, sum(quantity) as total_quantity, sum(price) as total_price
 from orders
 inner join order_details using(order_id)
