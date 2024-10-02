@@ -6,6 +6,10 @@ Buat tabel rangkuman hasil transaksi bulanan, yakni jumlah transaksi (_transacti
 
 > Query
 
+<details>
+
+<summary> <i>Lihat query</i> </summary>
+
 ```postgresql
 with order_summary as (
 	select
@@ -30,7 +34,15 @@ select
 from order_summary
 ```
 
+</details>
+
+</br>
+
 > Result
+
+<details>
+
+<summary> <i>Lihat result</i> </summary>
 
 |month|transaction_count|m_o_m_trx_count|total_transaction_value|m_o_m_total_trx_value|
 |-----|-----------------|---------------|-----------------------|---------------------|
@@ -52,15 +64,22 @@ from order_summary
 |202004|7955|0.09|21219233750|0.23|
 |202005|10026|0.26|31288823000|0.47|
 
+</details> </br>
+
+
 > Data Visualization (via Power BI)
 
 ![Monthly Transactions](/assets/monthly-trx.png)
 
-# User Retention Rate
+## User Retention Rate
 
 Buat tabel _user retention rate_ bulanan yang terinpirasi dari artikel [berikut](https://medium.com/cube-dev/customer-retention-analysis-93af9daee46b).
 
 > Query
+
+<details>
+
+<summary> <i>Lihat query</i> </summary>
 
 ```postgresql
 -- Pertama, kita buat tabel untuk merangkum kapan saja user melakukan transaksi tiap bulan
@@ -122,7 +141,15 @@ group by 1
 order by 1;
 ```
 
+</details>
+
+</br>
+
 > Result
+
+<details>
+
+<summary> <i>Lihat result</i> </summary>
 
 |year_month|retention|user_count|
 |----------|---------|----------|
@@ -144,11 +171,13 @@ order by 1;
 |202004|0.3141|7486|
 |202005|0.0000|9610|
 
+</details> </br>
+
 > Data Visualization (via Metabase)
 
 ![Monthly Retention Rate](/assets/monthly-retention.png)
 
-# User Retention Rate (Another Technique)
+## User Retention Rate (Another Technique)
 
 Dalam perhitungan _user retention rate_ sebelumnya, kita memperoleh informasi berapa persen user di bulan tertentu yang akan kembali lagi melakukan transaksi tepat di bulan berikutnya. 
 
@@ -157,6 +186,10 @@ Ada cara lain untuk menghitung _user retention rate_, yaitu menghitung berapa pe
 Dengan cara seperti ini, tim marketing dapat lebih mudah menargetkan inisiatif berdasarkan kepentingannya: apakah ingin memberikan reward kepada user 'retained' agar tetap bertransaksi di bulan berikutnya, menargetkan promo kepada user 'returning' agar lebih sering bertransaksi, dan sebagainya.
 
 > Query
+
+<details>
+
+<summary> <i>Lihat query</i> </summary>
 
 ```postgresql
 -- Pertama, kita buat tabel untuk merangkum kapan saja user melakukan transaksi tiap bulan
@@ -229,7 +262,15 @@ group by 1
 order by 1;
 ```
 
+</details>
+
+</br>
+
 > Result
+
+<details>
+
+<summary> <i>Lihat result</i> </summary>
 
 |year_month|retained|returning|new|user_count|
 |----------|--------|---------|---|----------|
@@ -251,6 +292,79 @@ order by 1;
 |202004|2661|4557|268|7486|
 |202005|2351|6977|282|9610|
 
+</details> </br>
+
 > Data Visualization (via Metabase)
 
 ![Monthly Users](/assets/monthly-users.png)
+
+## Monthly Transactions
+
+Buat tabel rangkuman hasil transaksi bulanan, yakni jumlah transaksi (_transaction_count_) dan total nilai transaksi (_total_transaction_value_), beserta pertumbuhan tiap bulannya (_m_o_m_: month-on-month growth).
+
+> Query
+
+<details>
+
+<summary> <i>Lihat query</i> </summary>
+
+```postgresql
+with order_summary as (
+	select
+		to_char(created_at, 'YYYYMM') as month,
+		count(1) as transaction_count,
+		sum(total) as total_transaction_value
+	from orders
+	group by 1
+	order by 1
+)
+
+select 
+	month,
+	transaction_count,
+	round(1::numeric * (transaction_count - 
+		lag(transaction_count) over(order by month)) /
+		lag(transaction_count) over(order by month), 2) as m_o_m_trx_count,
+	total_transaction_value,
+	round(1::numeric * (total_transaction_value - 
+		lag(total_transaction_value) over(order by month)) /
+		lag(total_transaction_value) over(order by month), 2) as m_o_m_total_trx_value
+from order_summary
+```
+
+</details>
+
+</br>
+
+> Result
+
+<details>
+
+<summary> <i>Lihat result</i> </summary>
+
+|month|transaction_count|m_o_m_trx_count|total_transaction_value|m_o_m_total_trx_value|
+|-----|-----------------|---------------|-----------------------|---------------------|
+|201901|117||145511000||
+|201902|354|2.03|305881150|1.10|
+|201903|668|0.89|679822000|1.22|
+|201904|984|0.47|1031096250|0.52|
+|201905|1462|0.49|1593491550|0.55|
+|201906|1913|0.31|2123578300|0.33|
+|201907|2667|0.39|3140933100|0.48|
+|201908|3274|0.23|4163502050|0.33|
+|201909|4327|0.32|5789167100|0.39|
+|201910|5577|0.29|8220707650|0.42|
+|201911|7162|0.28|11599678600|0.41|
+|201912|10131|0.41|17765555200|0.53|
+|202001|5062|-0.50|9941756800|-0.44|
+|202002|5872|0.16|12665113550|0.27|
+|202003|7323|0.25|17189378400|0.36|
+|202004|7955|0.09|21219233750|0.23|
+|202005|10026|0.26|31288823000|0.47|
+
+</details> </br>
+
+
+> Data Visualization (via Power BI)
+
+![Monthly Transactions](/assets/monthly-trx.png)
