@@ -11,6 +11,10 @@
 
 > Query
 
+<details>
+
+<summary> <i>Lihat query</i> </summary>
+
 ```postgresql
 select seller_id, buyer_id, total as nilai_transaksi, created_at as tanggal_transaksi
 from orders
@@ -18,6 +22,10 @@ where buyer_id = 10977
 order by 3 desc
 limit 10
 ```
+
+</details>
+
+</br>
 
 > Result
 
@@ -38,6 +46,10 @@ limit 10
 
 > Query
 
+<details>
+
+<summary> <i>Lihat query</i> </summary>
+
 ```postgresql
 select to_char(created_at, 'YYYYMM') as tahun_bulan, count(1) as jumlah_transaksi, sum(total) as total_nilai_transaksi
 from orders
@@ -45,6 +57,10 @@ group by 1
 order by 1 desc 
 limit 5
 ```
+
+</details>
+
+</br>
 
 > Result
 
@@ -61,6 +77,10 @@ limit 5
 
 > Query
 
+<details>
+
+<summary> <i>Lihat query</i> </summary>
+
 ```postgresql
 select buyer_id, count(1) as jumlah_transaksi, avg(total) as avg_nilai_transaksi
 from orders
@@ -70,6 +90,10 @@ having count(1)>= 2
 order by 3 desc
 limit 10
 ```
+
+</details>
+
+</br>
 
 > Result
 
@@ -91,6 +115,10 @@ limit 10
 
 > Query
 
+<details>
+
+<summary> <i>Lihat query</i> </summary>
+
 ```postgresql
 select users.nama_user as nama_pembeli, orders.total as nilai_transaksi, orders.created_at as tanggal_transaksi
 from orders
@@ -99,6 +127,10 @@ where created_at>='2019-12-01' and created_at<'2020-01-01'
 and total >= 2e7
 order by 1
 ```
+
+</details>
+
+</br>
 
 > Result
 
@@ -121,6 +153,10 @@ order by 1
 
 > Query
 
+<details>
+
+<summary> <i>Lihat query</i> </summary>
+
 ```postgresql
 select category, sum(quantity) as total_quantity, sum(price) as total_price
 from orders
@@ -132,6 +168,10 @@ group by 1
 order by 2 desc
 limit 5
 ```
+
+</details>
+
+</br>
 
 > Result
 
